@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chat</title>
+    <style>
+        /* Remove default spacing */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Page background */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111b21;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Main container for everything */
+        .whatsapp-container {
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            display: flex;
+            background-color: white;
+        }
+
+        /* Left side - Contact List */
+        .contacts-sidebar {
+            width: 35%;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header for contacts list */
+        .contacts-header {
+            background-color: #008069;
+            padding: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Search box */
+        .search-box {
+            padding: 10px;
+            background-color: #f0f2f5;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 14px;
+        }
+
+        /* List of contacts */
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            background-color: white;
+        }
+
+        /* Individual contact item */
+        .contact-item {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .contact-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Active/selected contact */
+        .contact-item.active {
+            background-color: #f0f2f5;
+        }
+
+        /* Profile picture in contact list */
+        .contact-pic {
+            width: 50px;
+            height: 50px;
+            background-color: #25d366;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Contact info (name and last message) */
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .last-message {
+            font-size: 13px;
+            color: #667781;
+        }
+
+        .contact-time {
+            font-size: 12px;
+            color: #667781;
+        }
+
+        /* Right side - Chat Area */
+        .chat-container {
+            width: 65%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Green header at top */
+        .chat-header {
+            background-color: #008069;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Profile picture circle */
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            background-color: #25d366;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Messages area with WhatsApp wallpaper */
+        .messages-area {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #efeae2;
+        }
+
+        /* Individual message bubble */
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+        }
+
+        /* Message bubble styling */
+        .message-bubble {
+            max-width: 65%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            position: relative;
+        }
+
+        /* Received messages (left side, white) */
+        .received {
+            justify-content: flex-start;
+        }
+
+        .received .message-bubble {
+            background-color: white;
+            border-radius: 0 8px 8px 8px;
+        }
+
+        /* Sent messages (right side, green) */
+        .sent {
+            justify-content: flex-end;
+        }
+
+        .sent .message-bubble {
+            background-color: #d9fdd3;
+            border-radius: 8px 0 8px 8px;
+        }
+
+        /* Time stamp in message */
+        .time {
+            font-size: 11px;
+            color: #667781;
+            margin-left: 5px;
+        }
+
+        /* Check marks for sent messages */
+        .checkmarks {
+            color: #53bdeb;
+            font-size: 12px;
+            margin-left: 3px;
+        }
+
+        /* Bottom input area */
+        .input-area {
+            background-color: #f0f2f5;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Text input box */
+        .message-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* Send button */
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            background-color: #008069;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .send-btn:hover {
+            background-color: #006b5a;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main WhatsApp container -->
+    <div class="whatsapp-container">
+        
+        <!-- LEFT SIDE: Contacts List -->
+        <div class="contacts-sidebar">
+            
+            <!-- Contacts header -->
+            <div class="contacts-header">
+                Chats
+            </div>
+
+            <!-- Search box -->
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search or start new chat">
+            </div>
+
+            <!-- List of all contacts -->
+            <div class="contacts-list">
+                
+                <!-- Contact 1 - Active -->
+                <div class="contact-item active">
+                    <div class="contact-pic">M</div>
+                    <div class="contact-info">
+                        <div class="contact-name">Mom</div>
+                        <div class="last-message">Will do!</div>
+                    </div>
+                    <div class="contact-time">2:37 PM</div>
+                </div>
+
+                <!-- Contact 2 -->
+                <div class="contact-item">
+                    <div class="contact-pic" style="background-color: #ff6b6b;">J</div>
+                    <div class="contact-info">
+                        <div class="contact-name">John</div>
+                        <div class="last-message">See you tomorrow!</div>
+                    </div>
+                    <div class="contact-time">1:15 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Chat Window -->
+        <div class="chat-container">
+            
+            <!-- Top header -->
+            <div class="chat-header">
+                <div class="profile-pic">M</div>
+                <div class="contact-name">Mom</div>
+            </div>
+
+            <!-- Messages section -->
+            <div class="messages-area">
+                
+                <!-- Received message -->
+                <div class="message received">
+                    <div class="message-bubble">
+                        Hi! Did you have lunch?
+                        <span class="time">2:30 PM</span>
+                    </div>
+                </div>
+
+                <!-- Sent message -->
+                <div class="message sent">
+                    <div class="message-bubble">
+                        Yes mom! I just ate
+                        <span class="time">2:32 PM</span>
+                        <span class="checkmarks">✓✓</span>
+                    </div>
+                </div>
+
+                <!-- Received message -->
+                <div class="message received">
+                    <div class="message-bubble">
+                        That's good! What did you eat?
+                        <span class="time">2:33 PM</span>
+                    </div>
+                </div>
+
+                <!-- Sent message -->
+                <div class="message sent">
+                    <div class="message-bubble">
+                        Had some pasta and salad
+                        <span class="time">2:35 PM</span>
+                        <span class="checkmarks">✓✓</span>
+                    </div>
+                </div>
+
+                <!-- Received message -->
+                <div class="message received">
+                    <div class="message-bubble">
+                        Great! Don't forget to drink water
+                        <span class="time">2:36 PM</span>
+                    </div>
+                </div>
+
+                <!-- Sent message -->
+                <div class="message sent">
+                    <div class="message-bubble">
+                        Will do!
+                        <span class="time">2:37 PM</span>
+                        <span class="checkmarks">✓✓</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom input area -->
+            <div class="input-area">
+                <input type="text" class="message-input" placeholder="Type a message">
+                <button class="send-btn">></button>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
